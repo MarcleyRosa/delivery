@@ -93,6 +93,8 @@ GEM
       ruby2_keywords
     error_highlight (0.6.0)
     erubi (1.12.0)
+    faker (3.2.3)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -208,6 +210,8 @@ GEM
       rspec-support (~> 3.12)
     rspec-support (3.13.0)
     ruby2_keywords (0.0.5)
+    shoulda-matchers (6.1.0)
+      activesupport (>= 5.2.0)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -255,11 +259,13 @@ DEPENDENCIES
   bootsnap
   debug
   error_highlight (>= 0.4.0)
+  faker
   importmap-rails
   jbuilder
   puma (>= 5.0)
   rails (~> 7.1.3)
   rspec-rails
+  shoulda-matchers
   sprockets-rails
   sqlite3 (~> 1.4)
   stimulus-rails
