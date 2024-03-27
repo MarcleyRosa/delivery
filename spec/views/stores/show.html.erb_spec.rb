@@ -1,9 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe "stores/show", type: :view do
+  let(:user) {
+    user = User.new(
+      email: 'exemplo@email.com',
+      password: '654321',
+      password_confirmation: '654321'
+    )
+  }
   before(:each) do
     assign(:store, Store.create!(
-      name: "Name"
+      name: "Name",
+      user: user
     ))
   end
 

@@ -5,7 +5,11 @@ RSpec.describe Store, type: :model do
 
   describe "validations" do
     it "should be valid when name is filled" do
+      user = User.new(
+        email: "user@example.com", password: "123456", password_confirmation: "123456"
+      )
       store = Store.new name: "Greatest store ever!"
+      store.user = user
       expect(store).to be_valid
     end
     it "should be not valid when name is not defined" do
