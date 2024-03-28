@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-
   resources :stores
+
+  post "new" => "registrations#create", as: :create_registration
 
   get "listing" => "products#listing"
 
