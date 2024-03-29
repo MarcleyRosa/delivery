@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   post "new" => "registrations#create", as: :create_registration
 
+  get "me" => "registrations#me"
+
   get "listing" => "products#listing"
 
   root to: "welcome#index"
