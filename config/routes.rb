@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get "me" => "registrations#me"
 
+  post "sign_in" => "registrations#sign_in"
+
   get "listing" => "products#listing"
 
   root to: "welcome#index"
