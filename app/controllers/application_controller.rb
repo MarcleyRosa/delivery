@@ -16,6 +16,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_credential
+    return nil if request.format != Mime[:json]
+
+    Credential.find_by(key: request.headers["X-API-KEY"]) || Credential.new
+  end
+
   private
     def check_token!
       if user = authenticate_with_http_token { |t, _| User.from_token(t) }

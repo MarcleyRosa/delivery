@@ -24,6 +24,25 @@ require 'rspec/rails'
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
+module APIRequestHelpers
+  def api_sign_in(user, credential)
+    post(
+      "/sign_in",
+      headers: {
+        "Accept" => "application/json",
+        # "Content-Type" => "application/json",
+        "X-API-KEY" => credential.key
+      },
+      params: {
+        login: {
+          email: user.email,
+          password: user.password
+        }
+      }
+    )
+    JSON.parse(response.body)
+  end
+end
 begin
   ActiveRecord::Migration.maintain_test_schema!
 rescue ActiveRecord::PendingMigrationError => e
@@ -31,6 +50,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include APIRequestHelpers, type: :request
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')
