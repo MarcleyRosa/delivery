@@ -1,6 +1,6 @@
 class OrderItem < ApplicationRecord
-  belongs_to :order, foreing_key: true
-  belongs_to :product, foreing_key: true
+  belongs_to :order
+  belongs_to :product
   
   validate :store_product
 
