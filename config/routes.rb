@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :create, :update, :destroy]
   end
 
+  resources :products
+
   post "new" => "registrations#create", as: :create_registration
 
   get "me" => "registrations#me"
@@ -12,6 +14,8 @@ Rails.application.routes.draw do
   post "sign_in" => "registrations#sign_in"
 
   get "listing" => "products#listing"
+
+  get "store/:id/products" => "products#products_store"
 
   root to: "welcome#index"
 
