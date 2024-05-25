@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_12_045908) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_23_153510) do
   create_table "credentials", force: :cascade do |t|
     t.integer "access"
     t.string "key", null: false
@@ -45,6 +45,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_12_045908) do
     t.decimal "price", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image"
     t.index ["store_id"], name: "index_products_on_store_id"
   end
 
