@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  skip_forgery_protection only: [:update]
+  skip_forgery_protection only: [:update, :create]
   before_action :authenticate_user!, only: [:listing]
   before_action :set_product, only: [:update]
   def listing
@@ -10,8 +10,25 @@ class ProductsController < ApplicationController
     @products = Product.includes(:store)
   end
 
+  def show
+  end
+
   def products_store
     @products = Product.where(store_id: params[:id])
+  end
+
+  def create
+    @product = Product.new(product_params)
+  
+    respond_to do |format|
+      if @product.save
+        format.html { redirect_to product_url(@product), notice: "Product was successfully created." }
+        format.json { render :show, status: :created, location: @product }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
@@ -29,7 +46,7 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:title, :price)
+    params.require(:product).permit(:title, :price, :image, :store_id)
   end
 
 end
