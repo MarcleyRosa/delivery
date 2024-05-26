@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   skip_forgery_protection
-  before_action :only_buyers, :authenticate!
+  before_action :authenticate!, :only_buyers!
 
   def index
     @orders = Order.where(buyer: current_user)
