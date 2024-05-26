@@ -8,6 +8,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_locale!
+    if params[:locale].present?
+      I18n.locale = params[:locale]
+    end
+  end
+
   def current_user
     if request.format == Mime[:json]
       @user
@@ -30,6 +36,11 @@ class ApplicationController < ActionController::Base
         render json: { message: "Not authorized" }, status: 401
       end
     end
+
+    def buyer?
+      (current_user && current_user.buyer?) && current_credential.buyer?
+    end
+
     def only_buyers!
       is_buyer = (current_user && current_user.buyer?) && current_credential.buyer?
       if !is_buyer
