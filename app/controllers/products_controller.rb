@@ -1,7 +1,20 @@
 class ProductsController < ApplicationController
   skip_forgery_protection only: [:update, :create]
-  before_action :authenticate_user!, only: [:listing]
+  before_action :authenticate!
+  before_action :set_locale!
   before_action :set_product, only: [:update]
+
+  def index
+    respond_to do |format|
+      format.json do
+        page = params.fetch(:page, 1)
+        if buyer?
+          @products = Product.where(store_id: params[:store_id]).order(:title).page(page)
+        end
+      end
+    end
+  end
+
   def listing
     if !current_user.admin?
       redirect_to root_path, notice: "No permission for you!"
