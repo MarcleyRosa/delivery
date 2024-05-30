@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
   skip_forgery_protection only: [:update, :create]
   before_action :authenticate!
   before_action :set_locale!
-  before_action :set_product, only: [:update]
+  before_action :set_product, only: [:update, :show]
 
   def index
     respond_to do |format|
