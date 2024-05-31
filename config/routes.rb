@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :create, :update, :destroy]
   end
 
+  resource :cart, only: [:show] do
+    post 'add_item', to: 'carts#add_item'
+    delete 'remove_item/:product_id', to: 'carts#remove_item', as: 'remove_item'
+  end
+
   resources :products
 
   post "new" => "registrations#create", as: :create_registration
