@@ -10,7 +10,7 @@ class User < ApplicationRecord
   class InvalidToken < StandardError; end
 
   def self.from_token(token)
-    decoded = JWT.decode token, "secret", true, { algorithm: 'HS256' }
+    decoded = JWT.decode token, ENV.fetch('SECRET_KEY', nil), true, { algorithm: 'HS256' }
     user_data = decoded[0].with_indifferent_access
     User.find(user_data[:id])
   rescue JWT::ExpiredSignature
@@ -20,7 +20,7 @@ class User < ApplicationRecord
   def self.token_for(user)
     jwt_headers = { exp: 1.hour.from_now.to_i }
     payload = { id: user.id, email: user.email, role: user.role }
-    JWT.encode payload.merge(jwt_headers), "secret", "HS256"
+    JWT.encode payload.merge(jwt_headers), ENV.fetch('SECRET_KEY', nil), "HS256"
   end
 
 end

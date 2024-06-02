@@ -51,6 +51,7 @@ group :development, :test do
   gem "pry-byebug", "~> 3.10"
   gem "debug", platforms: %i[ mri windows ]
   gem "shoulda-matchers"
+  gem "dotenv-rails"
   gem "faker"
 end
 
