@@ -6,9 +6,9 @@ class StoresController < ApplicationController
   # GET /stores or /stores.json
   def index
     if current_user.admin? || current_user.buyer?
-      @stores = Store.all
+      @stores = Store.includes(:image_attachment)
     else
-      @stores = Store.where(user: current_user)
+      @stores = Store.where(user: current_user).includes(:image_attachment)
     end
   end
 
@@ -79,9 +79,9 @@ class StoresController < ApplicationController
       required = params.require(:store)
 
       if current_user.admin?
-        required.permit(:name, :user_id)
+        required.permit(:name, :user_id, :image)
       else
-        required.permit(:name)
+        required.permit(:name, :image)
       end
     end
 end
