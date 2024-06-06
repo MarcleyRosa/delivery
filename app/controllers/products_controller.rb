@@ -45,7 +45,6 @@ class ProductsController < ApplicationController
   end
 
   def update
-    # update com imagem cusando recursividade
     if @product.update(product_params)
       render json: @product, status: :ok
     else
