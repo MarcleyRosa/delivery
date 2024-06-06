@@ -27,7 +27,7 @@ class ProductsController < ApplicationController
   end
 
   def products_store
-    @products = Product.where(store_id: params[:id])
+    @products = Product.where(store_id: params[:id]).includes(image_attachment: :blob)
   end
 
   def create
