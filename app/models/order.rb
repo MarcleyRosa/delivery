@@ -9,6 +9,17 @@ class Order < ApplicationRecord
     event :accept do
       transition created: :accepted
     end
+    # event :ship do
+    #   transition accepted: :shipped
+    # end
+  
+    # event :complete do
+    #   transition shipped: :completed
+    # end
+  
+    # event :cancel do
+    #   transition [:created, :accepted] => :canceled
+    # end
   end
 
   def accept
