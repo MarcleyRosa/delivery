@@ -1,8 +1,8 @@
 class ProductsController < ApplicationController
-  skip_forgery_protection only: [:update, :create]
+  skip_forgery_protection only: [:update, :create, :destroy]
   before_action :authenticate!
   before_action :set_locale!
-  before_action :set_product, only: [:update, :show]
+  before_action :set_product, only: [:update, :show, :destroy]
 
   def index
     respond_to do |format|
@@ -49,6 +49,15 @@ class ProductsController < ApplicationController
       render json: @product, status: :ok
     else
       render json: @product.errors, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @product.destroy!
+
+    respond_to do |format|
+      format.html { redirect_to product_url, notice: "Product was successfully destroyed." }
+      format.json { head :no_content }
     end
   end
 
