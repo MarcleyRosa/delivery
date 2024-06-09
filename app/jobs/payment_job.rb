@@ -3,9 +3,9 @@ class PaymentJob < ApplicationJob
 
   def perform(order:, value:, number:, valid:, cvv:)
     params = { value: value, number: number, valid: valid, cvv: cvv }
-    response = con.post("/payment", params.to_json)
+    response = con.post("/payments", params.to_json)
     # order.paid if response.success?
-    puts response
+    response
   end
 
   private
