@@ -2,6 +2,7 @@ class StoresController < ApplicationController
   skip_forgery_protection only: %i[create update]
   before_action :authenticate!
   before_action :set_store, only: %i[ show edit update destroy ]
+  include ActionController::Live
 
   # GET /stores or /stores.json
   def index
@@ -26,6 +27,30 @@ class StoresController < ApplicationController
 
   # GET /stores/1/edit
   def edit
+  end
+
+  def new_order
+    response.headers["Content-Type"] = "text/event-stream"
+
+    sse = SSE.new(response.stream, retry: 300, event: "waiting-orders")
+
+    sse.write({ hello: "word!"}, event: "waiting-orders")
+
+    EventMachine.run do
+      EventMachine::PeriodicTimer.new(3) do
+        order = Order.where(store_id: params[:store_id], state: :created)
+        if order
+          sse.write({ time: Time.now, order: order }, event: "new-order")
+        else
+          sse.write({ time: Time.now }, event: "no-orders")
+        end
+      end
+    end
+
+    rescue IOError, ActionController::Live::ClientDisconnected
+      sse.close
+    ensure
+      sse.close
   end
 
   # POST /stores or /stores.json
