@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :stores do
     resources :products, only: [:index]
+    get "/orders/new" => "stores#new_order"
   end
   scope :buyers do
     resources :orders, only: [:index, :create, :update, :destroy]
