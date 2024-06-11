@@ -6,6 +6,17 @@ class Product < ApplicationRecord
 
   validate :acceptable_image
 
+  def image_url
+    if image.attached?
+      # Rails.application.routes.url_helpers.url_for(image)
+      Rails.application.routes.url_helpers.rails_blob_path(image, only_path: true)
+    end
+  end
+
+  def as_json(options = {})
+    super(options.merge(methods: :image_url))
+  end
+
   private
 
   def acceptable_image

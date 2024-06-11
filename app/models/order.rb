@@ -22,6 +22,16 @@ class Order < ApplicationRecord
     # end
   end
 
+  def as_json(options = {})
+    super(options.merge(include: { 
+      order_items: { 
+        include: { 
+          product: { methods: :image_url } 
+        } 
+      } 
+    }))
+  end
+
   def accept
     if self.state == :created
       update! state: :accepted
