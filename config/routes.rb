@@ -17,6 +17,10 @@ Rails.application.routes.draw do
 
   post "new" => "registrations#create", as: :create_registration
 
+  get 'store/:id/orders', to: 'stores#store_orders'
+
+  get 'order/:id', to: 'orders#order_items'
+
   get "me" => "registrations#me"
 
   post "sign_in" => "registrations#sign_in"
