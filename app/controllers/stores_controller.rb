@@ -29,6 +29,11 @@ class StoresController < ApplicationController
   def edit
   end
 
+  def store_orders
+    @orders = Order.where(store_id: params[:id])
+    render json: { orders: @orders }
+  end
+
   def new_order
     response.headers["Content-Type"] = "text/event-stream"
 
