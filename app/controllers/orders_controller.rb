@@ -17,13 +17,11 @@ class OrdersController < ApplicationController
         @order.order_items.create(item_params)
       end
       PaymentJob.perform_later(
-        payment: {
           order: @order,
           value: payment_params[:value],
           valid: payment_params[:valid],
           number: payment_params[:number],
           cvv: payment_params[:cvv]
-        }
       )
       render :create, status: :created
     else
@@ -38,7 +36,21 @@ class OrdersController < ApplicationController
     render json: @order.as_json
   end
 
+  def accept
+    if @order.may_accept?
+      @order.accept
+      @order.save
+      render json: @order, status: :ok
+    else
+      render json: { error: "Cannot transition to accepted state" }, status: :unprocessable_entity
+    end
+  end
+
   private 
+  def set_order
+    @order = Order.find(params[:id])
+  end
+
   def payment_params
     params.require(:payment).permit(:value, :number, :valid, :cvv)
   end
