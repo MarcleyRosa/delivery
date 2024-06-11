@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
   skip_forgery_protection
-  before_action :authenticate!, :only_buyers!
+  before_action :authenticate!
+  before_action :only_buyers!, only: %i[index create]
 
   def index
     @orders = Order.where(buyer: current_user)
@@ -28,6 +29,13 @@ class OrdersController < ApplicationController
     else
       render json: { errors: @order.errors, status: :unprocessable_entity }
     end
+  end
+
+  def order_items
+    # @order = OrderItem.where(order_id: params[:id]).includes([:product])
+    # render json: @order.as_json(include: { product: { include: [:image_attachment] } })
+    @order = Order.includes(order_items: { product: :image_attachment }).find(params[:id])
+    render json: @order.as_json
   end
 
   private 
