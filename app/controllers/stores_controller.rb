@@ -41,13 +41,33 @@ class StoresController < ApplicationController
 
     sse.write({ hello: "word!"}, event: "waiting-orders")
 
+    # EventMachine.run do
+    #   EventMachine::PeriodicTimer.new(3) do
+    #     order = Order.where(store_id: params[:store_id], state: :created)
+    #     if order
+    #       sse.write({ time: Time.now, order: order }, event: "new-order")
+    #     else
+    #       sse.write({ time: Time.now }, event: "no-orders")
+    #     end
+    #   end
+    # end
+
     EventMachine.run do
-      EventMachine::PeriodicTimer.new(3) do
-        order = Order.where(store_id: params[:store_id], state: :created)
+      max_runs = 6
+      run_count = 0
+    
+      timer = EventMachine::PeriodicTimer.new(3) do
+        order = Order.where(store_id: params[:store_id], state: [:created, :paid])
         if order
           sse.write({ time: Time.now, order: order }, event: "new-order")
         else
           sse.write({ time: Time.now }, event: "no-orders")
+        end
+    
+        run_count += 1
+        if run_count >= max_runs
+          timer.cancel
+          EventMachine.stop 
         end
       end
     end
