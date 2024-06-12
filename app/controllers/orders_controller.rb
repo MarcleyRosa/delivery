@@ -2,6 +2,7 @@ class OrdersController < ApplicationController
   skip_forgery_protection
   before_action :authenticate!
   before_action :only_buyers!, only: %i[index create]
+  before_action :set_order, only: %i[update]
 
   def index
     @orders = Order.where(buyer: current_user)
@@ -29,6 +30,14 @@ class OrdersController < ApplicationController
     end
   end
 
+  def update
+    if @order.update(order_params_state)
+      render json: @order, status: :ok
+    else
+      render json: @order.errors, status: :unprocessable_entity
+    end
+  end
+
   def order_items
     # @order = OrderItem.where(order_id: params[:id]).includes([:product])
     # render json: @order.as_json(include: { product: { include: [:image_attachment] } })
@@ -36,17 +45,13 @@ class OrdersController < ApplicationController
     render json: @order.as_json
   end
 
-  def accept
-    if @order.may_accept?
-      @order.accept
-      @order.save
-      render json: @order, status: :ok
-    else
-      render json: { error: "Cannot transition to accepted state" }, status: :unprocessable_entity
-    end
-  end
 
   private 
+
+  def order_params_state
+    params.require(:order).permit(:state)
+  end
+
   def set_order
     @order = Order.find(params[:id])
   end
