@@ -131,7 +131,7 @@ class StoresController < ApplicationController
       if current_user.admin?
         required.permit(:name, :user_id, :image)
       else
-        required.permit(:name, :image)
+        required.permit(:name, :image, :active )
       end
     end
 end
