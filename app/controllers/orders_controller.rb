@@ -3,10 +3,55 @@ class OrdersController < ApplicationController
   before_action :authenticate!
   before_action :only_buyers!, only: %i[index create]
   before_action :set_order, only: %i[update]
+  include ActionController::Live
 
   def index
     @orders = Order.where(buyer: current_user)
     render json: { orders: @orders }
+  end
+
+  def order_state
+    response.headers["Content-Type"] = "text/event-stream"
+
+    sse = SSE.new(response.stream, retry: 300, event: "waiting-orders")
+
+    sse.write({ hello: "word!"}, event: "waiting-orders")
+
+    # EventMachine.run do
+    #   EventMachine::PeriodicTimer.new(3) do
+    #     order = Order.find(params[:id])
+    #     if order
+    #       sse.write({ time: Time.now, order: order }, event: "state-order")
+    #     else
+    #       sse.write({ time: Time.now }, event: "no-orders")
+    #     end
+    #   end
+    # end
+
+    EventMachine.run do
+      max_runs = 6
+      run_count = 0
+    
+      timer = EventMachine::PeriodicTimer.new(3) do
+        order = Order.find(params[:id])
+        if order
+          sse.write({ time: Time.now, state: order.state }, event: "state-order")
+        else
+          sse.write({ time: Time.now }, event: "no-orders")
+        end
+    
+        run_count += 1
+        if run_count >= max_runs
+          timer.cancel
+          EventMachine.stop 
+        end
+      end
+    end
+
+    rescue IOError, ActionController::Live::ClientDisconnected
+      sse.close
+    ensure
+      sse.close
   end
 
   def create

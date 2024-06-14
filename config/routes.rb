@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   get 'order/:id', to: 'orders#order_items'
 
+  get 'state/order/:id', to: 'orders#order_state'
+
   get "me" => "registrations#me"
 
   post "sign_in" => "registrations#sign_in"
