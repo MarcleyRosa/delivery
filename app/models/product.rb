@@ -3,6 +3,7 @@ class Product < ApplicationRecord
   has_many :orders, through: :order_items
   has_many :cart_items
   has_one_attached :image
+  validates :stock, numericality: { greater_than_or_equal_to: 0 }
 
   validate :acceptable_image
 
