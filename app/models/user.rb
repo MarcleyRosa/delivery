@@ -5,6 +5,9 @@ class User < ApplicationRecord
   enum :role, [:admin, :seller, :buyer]
   has_one :cart, dependent: :destroy
   has_many :stores
+  has_one :address, dependent: :destroy
+  accepts_nested_attributes_for :address
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   class InvalidToken < StandardError; end

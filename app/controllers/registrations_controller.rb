@@ -2,6 +2,7 @@ class RegistrationsController < ApplicationController
   skip_forgery_protection only: [:create, :me, :sign_in]
   before_action :authenticate!, only: [:me]
   rescue_from User::InvalidToken, with: :not_authorized
+
   def create
     @user = User.new(user_params)
     @user.role = current_credential.access
@@ -37,7 +38,15 @@ class RegistrationsController < ApplicationController
       params.required(:login).permit(:email, :password)
     end
     def user_params
-      params.required(:user).permit(:email, :password, :password_confirmation)
+      params.required(:user).permit(:email, :password, :password_confirmation, address_attributes: [
+        :street, 
+        :house_number, 
+        :neighborhood, 
+        :city, 
+        :state, 
+        :zip_code, 
+        :country
+      ])
       # required = params.required(:user)
 
       # if current_user.admin?
