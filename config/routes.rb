@@ -25,6 +25,10 @@ Rails.application.routes.draw do
 
   get "me" => "registrations#me"
 
+  get "profile" => "registrations#profile"
+
+  delete "profile/:id" => "registrations#destroy"
+
   post "sign_in" => "registrations#sign_in"
 
   get "listing" => "products#listing"
