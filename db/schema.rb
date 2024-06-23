@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_21_053827) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_23_054131) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -106,6 +106,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_053827) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "stock", default: 0, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_products_on_discarded_at"
     t.index ["store_id"], name: "index_products_on_store_id"
   end
 
@@ -115,6 +117,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_053827) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.boolean "active", default: false, null: false
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_stores_on_discarded_at"
     t.index ["user_id"], name: "index_stores_on_user_id"
   end
 
@@ -127,6 +131,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_053827) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

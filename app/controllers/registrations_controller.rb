@@ -1,6 +1,6 @@
 class RegistrationsController < ApplicationController
-  skip_forgery_protection only: [:create, :me, :sign_in]
-  before_action :authenticate!, only: [:me]
+  skip_forgery_protection only: [:create, :me, :sign_in, :destroy]
+  before_action :authenticate!, only: [:me, :profile]
   rescue_from User::InvalidToken, with: :not_authorized
 
   def create
@@ -14,13 +14,25 @@ class RegistrationsController < ApplicationController
     end
   end
 
+  def profile
+    render json: User.find(current_user.id).as_json(include: :address)
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    @user.discard
+
+    head :no_content
+  end
+
+
   def me
     render json: { id: current_user.id, email: current_user.email }
   end
 
   def sign_in  
     access = Credential.create_access(:"#{current_credential.access}").access
-    user = User.where(role: access).find_by(email: sign_in_params[:email])
+    user = User.where(role: access).kept.find_by(email: sign_in_params[:email])
 
     if !user || !user.valid_password?(sign_in_params[:password])
       render json: { message: "Nope!" }, status: 401

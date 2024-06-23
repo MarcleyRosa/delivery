@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-  skip_forgery_protection only: %i[create update]
+  skip_forgery_protection only: %i[create update destroy]
   before_action :authenticate!
   before_action :set_store, only: %i[ show edit update destroy ]
   include ActionController::Live
@@ -7,9 +7,9 @@ class StoresController < ApplicationController
   # GET /stores or /stores.json
   def index
     if current_user.admin? || current_user.buyer?
-      @stores = Store.includes(:image_attachment)
+      @stores = Store.includes(:image_attachment).kept
     else
-      @stores = Store.where(user: current_user).includes(:image_attachment)
+      @stores = Store.where(user: current_user).includes(:image_attachment).kept
     end
   end
 
@@ -110,7 +110,7 @@ class StoresController < ApplicationController
 
   # DELETE /stores/1 or /stores/1.json
   def destroy
-    @store.destroy!
+    @store.discard
 
     respond_to do |format|
       format.html { redirect_to stores_url, notice: "Store was successfully destroyed." }
