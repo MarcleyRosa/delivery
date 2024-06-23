@@ -7,7 +7,7 @@ class StoresController < ApplicationController
   # GET /stores or /stores.json
   def index
     if current_user.admin? || current_user.buyer?
-      @stores = Store.includes(:image_attachment)
+      @stores = Store.includes(:image_attachment).kept
     else
       @stores = Store.where(user: current_user).includes(:image_attachment).kept
     end
