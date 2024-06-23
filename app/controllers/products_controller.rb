@@ -27,7 +27,7 @@ class ProductsController < ApplicationController
   end
 
   def products_store
-    @products = Product.where(store_id: params[:id]).includes(image_attachment: :blob)
+    @products = Product.where(store_id: params[:id]).kept.includes(image_attachment: :blob)
   end
 
   def create
@@ -53,7 +53,7 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product.destroy!
+    @product.discard
 
     respond_to do |format|
       format.html { redirect_to product_url, notice: "Product was successfully destroyed." }
