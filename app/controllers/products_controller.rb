@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  skip_forgery_protection only: [:update, :create, :destroy]
+  skip_forgery_protection only: [:update, :create, :destroy, :products_listing]
   before_action :authenticate!
   before_action :set_locale!
   before_action :set_product, only: [:update, :show, :destroy]
@@ -9,10 +9,31 @@ class ProductsController < ApplicationController
       format.json do
         page = params.fetch(:page, 1)
         if buyer?
-          @products = Product.where(store_id: params[:store_id]).order(:title).page(page)
+          @products = Product.where(store_id: params[:store_id]).kept.includes(image_attachment: :blob).order(:title).page(page)
         end
       end
     end
+  end
+
+  def products_listing
+    respond_to do |format|
+      format.json do
+        page = params.fetch(:page, 1)
+        if buyer?
+          @products = Product.all.kept.includes(image_attachment: :blob).order(:title).page(page)
+        end
+      end
+    end
+  end
+
+  def search
+    if params[:q].present?
+      @products = Product.where("title LIKE ?", "%#{params[:q]}%")
+      @stores = Store.where("name LIKE ?", "%#{params[:q]}%")
+    else
+      @products = []
+    end
+    render json: { products: @products, stores: @stores }
   end
 
   def listing

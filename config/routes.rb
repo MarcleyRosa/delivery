@@ -21,6 +21,8 @@ Rails.application.routes.draw do
 
   get 'order/:id', to: 'orders#order_items'
 
+  get 'search' => 'products#search'
+
   get 'state/order/:id', to: 'orders#order_state'
 
   get "me" => "registrations#me"
@@ -32,6 +34,8 @@ Rails.application.routes.draw do
   post "sign_in" => "registrations#sign_in"
 
   get "listing" => "products#listing"
+
+  post "products/linsting" => "products#products_listing"
 
   get "store/:id/products" => "products#products_store"
 
