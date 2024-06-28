@@ -10,7 +10,7 @@ class ChatChannel < ApplicationCable::Channel
 
   def speak(data)
     message = data['message']
-    ActionCable.server.broadcast("chat_#{params[:sender_id]}_#{params[:receiver_id]}", { message: message })
-    ActionCable.server.broadcast("chat_#{params[:receiver_id]}_#{params[:sender_id]}", { message: message })
+    ActionCable.server.broadcast("chat_#{params[:sender_id]}_#{params[:receiver_id]}", { message: message, sender_id: params[:sender_id] })
+    ActionCable.server.broadcast("chat_#{params[:receiver_id]}_#{params[:sender_id]}", { message: message, sender_id: params[:sender_id] })
   end
 end
