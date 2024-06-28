@@ -86,3 +86,6 @@ gem "sidekiq", "~> 7.2"
 gem "eventmachine", "~> 1.2"
 
 gem "discard", "~> 1.3"
+
+gem 'redis', '~> 4.0'
+

@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     delete 'remove_item/:product_id', to: 'carts#remove_item', as: 'remove_item'
   end
 
+  resources :messages, only: [:index, :create]
+
+  resources :messages, only: [:create]
+  mount ActionCable.server => '/cable'
+
   resources :products
 
   post "new" => "registrations#create", as: :create_registration
