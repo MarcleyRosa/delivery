@@ -4,12 +4,16 @@ class CartsController < ApplicationController
   before_action :set_cart, only: [:show, :add_item, :remove_item, :destroy]
 
   def show
-    # user = Cart.find_by(user_id: current_user.id)
-    # render json: user, include: { cart_items: { include: :product } }
-    # @cart = current_user.cart
-    @cart_items = @cart.cart_items.includes(:product)
-    
-    render json: @cart_items, include: :product
+    @cart_items = @cart.cart_items.includes(product: { image_attachment: :blob })
+  
+    cart_items_json = @cart_items.as_json(include: {
+      product: {
+        methods: :image_url,
+        only: [:id, :title, :price]
+      }
+    })
+  
+    render json: cart_items_json
   end
 
   def add_item
