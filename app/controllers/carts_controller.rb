@@ -9,7 +9,7 @@ class CartsController < ApplicationController
     cart_items_json = @cart_items.as_json(include: {
       product: {
         methods: :image_url,
-        only: [:id, :title, :price]
+        only: [:id, :title, :price, :store_id]
       }
     })
   
