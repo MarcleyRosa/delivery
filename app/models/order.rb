@@ -13,6 +13,7 @@ class Order < ApplicationRecord
     state :shipped
     state :completed
     state :canceled
+    state :payment_failed
     
     event :paid do
       transition created: :paid
@@ -35,7 +36,11 @@ class Order < ApplicationRecord
     end
   
     event :cancel do
-      transition [:created, :accepted] => :canceled
+      transition [:created, :accepted, :payment_failed] => :canceled
+    end
+  
+    event :fail_payment do
+      transition created: :payment_failed
     end
   end
 
